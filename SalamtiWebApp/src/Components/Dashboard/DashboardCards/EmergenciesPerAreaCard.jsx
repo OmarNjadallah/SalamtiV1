@@ -17,9 +17,12 @@ function EmergenciesPerAreaCard({ areas }) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <Card className="w-full max-w-md lg:max-w-lg h-auto rounded-lg bg-gray-100 shadow-md flex flex-col col-span-3 row-span-1">
-      <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 ">
-        <h1 className="font-bold text-2xl sm:text-xl">Emergencies per area</h1>
+    <Card className="w-full h-full rounded-lg bg-gray-100 shadow-md flex flex-col col-span-3 row-span-1">
+      {/* Card Header */}
+      <CardContent className="flex justify-between items-center p-4 border-b">
+        <Typography className="font-bold text-lg sm:text-xl">
+          Emergencies per area
+        </Typography>
         <Select
           value={selectedPeriod}
           onChange={handlePeriodChange}
@@ -32,14 +35,18 @@ function EmergenciesPerAreaCard({ areas }) {
           <MenuItem value="thisYear">This Year</MenuItem>
         </Select>
       </CardContent>
-      <div className="flex-grow overflow-y-auto max-h-72 p-4">
+
+      {/* Card Content */}
+      <div className="flex-grow overflow-y-auto p-4">
         {selectedAreas.length > 0 ? (
           selectedAreas.map((area, i) => (
             <div
               key={i}
               className="flex justify-between py-2 border-b last:border-b-0"
             >
-              <Typography className="font-bold">{area.area}</Typography>
+              <Typography className="font-bold text-gray-800">
+                {area.area}
+              </Typography>
               <Typography className="text-gray-700 font-bold">
                 {area.count}
               </Typography>

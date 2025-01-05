@@ -14,16 +14,16 @@ function EmergenciesBreakdownCard({ casesData }) {
     timePeriod && casesData[timePeriod] ? casesData[timePeriod] : [];
 
   return (
-    <Card className="rounded-md bg-gray-100 shadow-sm flex flex-col col-span-4 row-span-1 p-2">
+    <Card className="rounded-lg bg-gray-100 shadow-md flex flex-col col-span-4 row-span-1 h-full">
       {/* Header Section */}
-      <CardContent className="flex flex-col md:flex-row justify-between items-start md:items-center p-2">
-        <p className="font-bold text-sm md:text-lg">Emergencies Breakdown</p>
-        <FormControl size="small" className="mt-2 md:mt-0">
+      <CardContent className="flex justify-between items-center p-4 border-b">
+        <p className="font-bold text-lg">Emergencies Breakdown</p>
+        <FormControl size="small" className="w-auto">
           <Select
             value={timePeriod}
             onChange={(e) => setTimePeriod(e.target.value)}
             displayEmpty
-            className="bg-white border rounded-md text-xs md:text-sm"
+            className="bg-white border rounded-md text-sm"
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
                 border: "none", // Remove default border
@@ -42,21 +42,21 @@ function EmergenciesBreakdownCard({ casesData }) {
       </CardContent>
 
       {/* Chart Section */}
-      <CardContent className="flex-grow flex justify-around items-center p-2">
+      <CardContent className="flex-grow flex justify-center items-center">
         {currentData.length > 0 ? (
           <PieChart
             series={[
               {
-                cornerRadius: 12,
+                cornerRadius: 5,
                 data: currentData.map((item) => ({
                   ...item,
-                  value: parseInt(item.count), // Use `count` from the new format
+                  value: parseInt(item.count, 10),
                 })),
                 arcLabel: (item) => item.value,
               },
             ]}
             tooltip={{ trigger: "item" }}
-            className="w-full max-w-xs h-full max-h-56"
+            className="w-full h-full max-h-[220px]"
           />
         ) : (
           <p className="text-gray-500 text-sm text-center">No data available</p>

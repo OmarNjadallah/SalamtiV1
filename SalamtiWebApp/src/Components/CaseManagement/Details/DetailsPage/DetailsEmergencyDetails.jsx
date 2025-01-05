@@ -2,7 +2,7 @@ import React from "react";
 
 const DetailsEmergencyDetails = ({ caseDetails }) => {
   return (
-    <div className="p-3 bg-black rounded-md shadow-md border border-gray-700">
+    <div className="p-3 bg-black rounded-md shadow-md border h-[350px] overflow-scroll border-gray-700">
       <h2 className="text-md font-semibold mb-3 text-left text-white">
         Emergency Details
       </h2>

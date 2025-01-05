@@ -10,7 +10,7 @@ const AddUser = () => {
       buttonClassName={
         "bg-custom-black w-[8vh] h-[8vh] text-xl rounded-full font-bold text-custom-white "
       }
-      classNameSize={"w-[500px]"}
+      classNameSize={"w-[500px] max-w-[90%]"}
     />
   );
 };

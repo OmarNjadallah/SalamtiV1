@@ -25,7 +25,7 @@ const Details = ({ caseId }) => {
       button="Details"
       buttonClassName="ml-1 bg-custom-gray text-center text-custom-white hover:bg-custom-dark-gray px-2 py-1 rounded transition-all duration-300 ease-in-out transform font-semibold"
       onFetchData={handleFetchDetails}
-      classNameSize={"w-[60vw]"}
+      classNameSize={"w-[90vw]"}
     />
   );
 };

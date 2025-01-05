@@ -1,7 +1,7 @@
 import React from "react";
 const Title = ({ text }) => {
   return (
-    <div className="text-4xl font-bold bg-transparent mt-5 ml-5">{text}</div>
+    <div className="text-4xl font-bold bg-transparent mt-5 pl-[75px]">{text}</div>
   );
 };
 export default Title;

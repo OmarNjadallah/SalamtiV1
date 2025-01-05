@@ -3,7 +3,7 @@ import React from "react";
 const DetailsTable = ({ caseDetails }) => {
   return (
     <div>
-      <table className="table-auto w-[25vw] text-left text-gray-300 border-collapse border border-white h-[350px]">
+      <table className="table-auto w-[100%] text-left text-gray-300 border-collapse border border-white h-[350px]">
         <tbody>
           <tr className="hover:bg-custom-dark-gray">
             <td className="px-4 py-2 border border-gray-700 font-semibold">

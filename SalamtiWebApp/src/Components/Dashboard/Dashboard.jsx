@@ -26,7 +26,6 @@ function App() {
         setError(true);
       }
     };
-
     fetchData();
   }, []);
 
@@ -52,22 +51,24 @@ function App() {
   } = dashboardData;
 
   return (
-    <div className="container mx-auto p-4 h-screen">
-      {/* Responsive Grid Layout */}
-      <div className="grid grid-cols-8 w-full gap-4 h-full">
-        {/* First Row: Smaller Cards */}
-        <div className="flex flex-col col-span-1 gap-4">
+    <div className="container mx-auto p-4 min-h-screen">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-8 gap-6 h-full">
+        <div className="col-span-1 sm:col-span-2 lg:col-span-2 flex flex-col gap-4">
           <ESPStatusCard ESPData={ESPData} />
           <TotalEmergenciesCard caseList={casesData} />
         </div>
-
-        {/* Second Row: Medium Cards */}
-        <EmergenciesBreakdownCard casesData={casesTypesList} />
-        <EmergenciesPerAreaCard areas={areas} />
-
-        {/* Third Row: Wider Cards */}
-        <MonthlyAveragesCard yearlyMonthlyAverages={avgResponseTimeList} />
-        <NumberOfEmergenciesCard numOfEmergenciesList={numOfEmergenciesList} />
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+          <EmergenciesBreakdownCard casesData={casesTypesList} />
+        </div>
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+          <EmergenciesPerAreaCard areas={areas} />
+        </div>
+        <div className="col-span-1 sm:col-span-2 lg:col-span-4">
+          <MonthlyAveragesCard yearlyMonthlyAverages={avgResponseTimeList} />
+        </div>
+        <div className="col-span-1 sm:col-span-2 lg:col-span-4">
+          <NumberOfEmergenciesCard numOfEmergenciesList={numOfEmergenciesList} />
+        </div>
       </div>
     </div>
   );

@@ -6,8 +6,10 @@ import { useGoogleMaps } from "../../../../../Config/GoogleMapsProvider";
 const DetailsMap = ({ caseDetails }) => {
   const { isLoaded } = useGoogleMaps();
   const mapContainerStyle = {
-    width: "300px",
-    height: "350px",
+    width: "100%",
+    minWidth: "300px",
+    minHeight: "350px",
+    height: "100%",
     borderRadius: "8px",
   };
 
