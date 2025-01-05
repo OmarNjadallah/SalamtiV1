@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-SalamtiWebApp\Config\Firebase.js
+SalamtiWebApp\Config\APIKEYS.js
 
 GoogleAPIley.js
 node_modules
@@ -14,7 +14,7 @@ dist
 dist-ssr
 *.local
 .env
-SalamtiWebApp\Config\GoogleAPIkey.js
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
