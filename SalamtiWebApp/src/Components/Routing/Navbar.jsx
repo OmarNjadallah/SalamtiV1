@@ -76,7 +76,7 @@ const Navbar = () => {
 
       {/* Navbar */}
       <div
-        className={`bg-custom-black text-custom-white p-4 flex-col h-auto min-h-screen w-[80%] sm:w-[60%] lg:w-[20%] flex justify-between rounded-tr-3xl rounded-br-3xl fixed top-0 left-0 border border-custom-border shadow-lg z-[1100] transform transition-transform duration-300 ${
+        className={`bg-custom-black text-custom-white p-4 flex-col h-auto min-h-screen w-[80%] sm:w-[60%] border-black lg:w-[20%] flex justify-between rounded-tr-3xl rounded-br-3xl fixed top-0 left-0 border border-custom-border shadow-lg z-[1100] transform transition-transform duration-300 ${
           navbarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
