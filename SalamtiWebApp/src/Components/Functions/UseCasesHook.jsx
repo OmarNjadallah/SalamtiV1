@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { db } from "../../../Config/Firebase";
 import { onSnapshot, doc, getDoc, collection } from "firebase/firestore";
 import axios from "axios";
+import { googleApiKey } from "../../../Config/GoogleAPIkey";
 const cache = new Map(); // Cache to store fetched area names
 
 const fetchAreaName = async (lat, lng) => {
@@ -18,7 +19,7 @@ const fetchAreaName = async (lat, lng) => {
       {
         params: {
           latlng: `${lat},${lng}`,
-          key: "AIzaSyBKs_fbiolpGriQHbb0-x8z68Y0p-b2OrY",
+          key: googleApiKey,
         },
       }
     );

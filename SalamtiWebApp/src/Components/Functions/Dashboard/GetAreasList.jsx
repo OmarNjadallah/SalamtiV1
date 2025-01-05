@@ -1,4 +1,5 @@
-const googleGeocodeAPI = "AIzaSyBKs_fbiolpGriQHbb0-x8z68Y0p-b2OrY";
+import { googleApiKey } from "../../../../Config/GoogleAPIkey";
+const googleGeocodeAPI = googleApiKey;
 export async function getAreasList(casesList) {
   if (!casesList || casesList.length === 0) return [];
 
