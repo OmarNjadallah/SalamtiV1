@@ -69,7 +69,7 @@ function ESPStatusCard({ ESPData }) {
             onChange={(e) => setSelectedType(e.target.value)}
             displayEmpty
             sx={{
-              fontSize: "20px",
+              fontSize: "1rem",
               fontWeight: "bold",
               color: "#1F2937",
               "& .MuiOutlinedInput-notchedOutline": {
