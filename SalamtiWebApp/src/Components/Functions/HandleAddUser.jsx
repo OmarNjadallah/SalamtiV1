@@ -62,7 +62,6 @@ export const addUser = async ({ licensePlate, password, type }) => {
     };
     await setDoc(doc(espsCollection, espId), espDoc);
 
-    console.log("User and ESP added successfully.");
     return { success: true, userId, espId };
   } catch (error) {
     console.error("Error adding user and ESP: ", error.message);

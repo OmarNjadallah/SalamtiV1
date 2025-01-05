@@ -1,6 +1,4 @@
 export function calculateYearlyMonthlyAverages(cases) {
-  console.log(cases);
-
   // Helper function to parse Firebase Timestamp or AM/PM string to Date
   const parseTimestamp = (timestamp) => {
     if (timestamp?.toDate) {

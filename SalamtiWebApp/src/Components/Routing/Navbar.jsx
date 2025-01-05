@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+
 import { NavLink } from "react-router-dom";
 import LogoutButton from "../Common/LogoutButton";
 
@@ -17,7 +18,11 @@ const Navbar = () => {
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
-      if (dropdownOpen && dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (
+        dropdownOpen &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -30,42 +35,44 @@ const Navbar = () => {
 
   return (
     <>
-      {!dropdownOpen && <button
-        className="fixed top-4 left-4 z-[1050] text-custom-white bg-custom-black p-2 rounded-lg shadow-lg"
-        onClick={toggleNavbar}
-      >
-        {navbarOpen ? (
-          <svg
-            className="h-8 w-8"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        ) : (
-          <svg
-            className="h-8 w-8"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        )}
-      </button>}
+      {!dropdownOpen && (
+        <button
+          className="fixed top-4 left-4 z-[1050] text-custom-white bg-custom-black p-2 rounded-lg shadow-lg"
+          onClick={toggleNavbar}
+        >
+          {navbarOpen ? (
+            <svg
+              className="h-8 w-8"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              className="h-8 w-8"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
+        </button>
+      )}
 
       {/* Navbar */}
       <div
@@ -112,6 +119,7 @@ const Navbar = () => {
                   : " text-custom-white"
               } block py-3 my-1 px-4 rounded-xl transition duration-300 hover:bg-custom-dark-gray hover:text-custom-white`
             }
+            onClick={toggleNavbar}
           >
             Dashboard
           </NavLink>
@@ -124,6 +132,7 @@ const Navbar = () => {
                   : " text-custom-white"
               } block py-3 my-1 px-4 rounded-xl transition duration-300 hover:bg-custom-dark-gray hover:text-custom-white`
             }
+            onClick={toggleNavbar}
           >
             Live Map
           </NavLink>
@@ -136,6 +145,7 @@ const Navbar = () => {
                   : " dark:text-custom-white"
               } block py-3 my-1 px-4 rounded-xl transition duration-300 hover:bg-custom-dark-gray hover:text-custom-white`
             }
+            onClick={toggleNavbar}
           >
             Cases
           </NavLink>
@@ -148,6 +158,7 @@ const Navbar = () => {
                   : " text-custom-white"
               } block py-3 my-1 px-4 rounded-xl transition duration-300 hover:bg-custom-dark-gray hover:text-custom-white`
             }
+            onClick={toggleNavbar}
           >
             Account Management
           </NavLink>

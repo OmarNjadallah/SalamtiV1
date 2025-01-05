@@ -52,7 +52,7 @@ function EmergenciesBreakdownCard({ casesData }) {
                   ...item,
                   value: parseInt(item.count, 10),
                 })),
-                arcLabel: (item) => item.value,
+                arcLabel: (item) => `${item.value}`, // Ensure the value is returned as a string
               },
             ]}
             tooltip={{ trigger: "item" }}
