@@ -1,4 +1,4 @@
-export const googleApiKey = "";
-export const fireBaseApiKey = "";
-export const fireBaseAuthDomain = "";
-export const fireBaseProjectId = "";
+export const googleApiKey1 = "";
+export const fireBaseApiKey1 = "";
+export const fireBaseAuthDomain1 = "";
+export const fireBaseProjectId1 = "";

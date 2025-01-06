@@ -1,10 +1,10 @@
 import {
-  googleApiKey,
-  fireBaseApiKey,
-  fireBaseAuthDomain,
-  fireBaseProjectId,
+  googleApiKey1,
+  fireBaseApiKey1,
+  fireBaseAuthDomain1,
+  fireBaseProjectId1,
 } from "./APIKEYS";
-export const googleApiKey = googleApiKey;
-export const fireBaseApiKey = fireBaseApiKey;
-export const fireBaseAuthDomain = fireBaseAuthDomain;
-export const fireBaseProjectId = fireBaseProjectId;
+export const googleApiKey = googleApiKey1;
+export const fireBaseApiKey = fireBaseApiKey1;
+export const fireBaseAuthDomain = fireBaseAuthDomain1;
+export const fireBaseProjectId = fireBaseProjectId1;
