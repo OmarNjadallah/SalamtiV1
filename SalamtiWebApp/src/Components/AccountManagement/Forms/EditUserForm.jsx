@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { editUser } from "../../Functions/HandleEditUser";
 import { useSnackbar } from "notistack";
-import bcrypt from "bcryptjs";
 
 const EditUserForm = ({ userData, userId }) => {
   const [formData, setFormData] = useState(null);
@@ -44,30 +43,38 @@ const EditUserForm = ({ userData, userId }) => {
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
+
     if (name === "newPassword") {
-      setNewPassword(value);
-      setPasswordMatch(value === confirmPassword);
+      setNewPassword(value.trim() ? value : ""); // Update newPassword
+      setPasswordMatch(value === confirmPassword); // Check match with confirmPassword
     } else if (name === "confirmPassword") {
-      setConfirmPassword(value);
-      setPasswordMatch(newPassword === value);
+      setConfirmPassword(value.trim() ? value : ""); // Update confirmPassword
+      setPasswordMatch(newPassword === value); // Check match with newPassword
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Ensure passwords match before submission
     if (!passwordMatch) {
       enqueueSnackbar("Passwords do not match.", { variant: "error" });
       return;
     }
 
-    try {
-      const hashedPassword = newPassword
-        ? await bcrypt.hash(newPassword, 10)
-        : formData.user.Password; // Keep original password if none is provided
+    const userUpdates = { ...formData.user };
 
+    // Only include Password if newPassword and confirmPassword match and are non-empty
+    if (newPassword && passwordMatch) {
+      userUpdates.Password = newPassword; // Include password
+    } else {
+      delete userUpdates.Password; // Remove Password to avoid accidental updates
+    }
+
+    try {
       await editUser({
         userId,
-        userUpdates: { ...formData.user, Password: hashedPassword },
+        userUpdates,
         espUpdates: formData.esp,
         enqueueSnackbar,
       });

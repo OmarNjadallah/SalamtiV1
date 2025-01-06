@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import bcrypt from "bcryptjs";
 import { db } from "../../../Config/Firebase";
+import { hashPassword } from "./HashPassword";
 
 export const addUser = async ({ licensePlate, password, type }) => {
   try {
@@ -37,11 +38,7 @@ export const addUser = async ({ licensePlate, password, type }) => {
     const espId = doc(espsCollection).id;
 
     // Hash the password
-    const saltRounds = 10;
-    const hashedPassword = bcrypt.hashSync(
-      password,
-      bcrypt.genSaltSync(saltRounds)
-    );
+    const hashedPassword = hashPassword(password);
 
     // Create the user document
     const userDoc = {

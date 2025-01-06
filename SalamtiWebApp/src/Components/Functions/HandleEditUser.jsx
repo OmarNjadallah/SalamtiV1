@@ -8,7 +8,8 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import bcrypt from "bcryptjs";
+
+import { hashPassword } from "./HashPassword";
 
 export const fetchEspData = async ({ userId }) => {
   try {
@@ -54,14 +55,17 @@ export const editUser = async ({
   enqueueSnackbar,
 }) => {
   try {
-    // Hash password if provided in userUpdates
-    if (userUpdates && userUpdates.Password) {
-      const saltRounds = 10;
-      userUpdates.Password = bcrypt.hashSync(
-        userUpdates.Password,
-        bcrypt.genSaltSync(saltRounds)
-      );
+    // Ensure Password is only updated if it is provided and not empty
+    if (userUpdates && userUpdates.Password !== undefined) {
+      if (userUpdates.Password.trim()) {
+        userUpdates.Password = hashPassword(userUpdates.Password); // Use the same hashing logic
+      } else {
+        delete userUpdates.Password; // Remove the field if it is empty
+      }
     }
+
+    console.log("Final userUpdates:", userUpdates); // Debugging: Check the object before updating
+
     // Update user document
     if (userUpdates) {
       await updateDoc(doc(db, "users", userId), userUpdates);
@@ -76,19 +80,16 @@ export const editUser = async ({
       const espQuerySnapshot = await getDocs(espQuery);
 
       if (!espQuerySnapshot.empty) {
-        const espDocRef = espQuerySnapshot.docs[0].ref; // Assuming one match
+        const espDocRef = espQuerySnapshot.docs[0].ref;
         await updateDoc(espDocRef, espUpdates);
       }
     }
 
-    // Show success notification
     enqueueSnackbar("User and ESP data updated successfully!", {
       variant: "success",
     });
   } catch (error) {
     console.error("Error updating data:", error);
-
-    // Show error notification
     enqueueSnackbar("Failed to update user or ESP data.", { variant: "error" });
   }
 };
