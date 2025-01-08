@@ -52,9 +52,56 @@ export const editUser = async ({
   userId,
   userUpdates,
   espUpdates,
+  currentUsername, // Pass the original username for comparison
   enqueueSnackbar,
 }) => {
   try {
+    // Debugging: Log the input parameters
+    console.log("editUser called with:", {
+      userId,
+      userUpdates,
+      espUpdates,
+      currentUsername,
+    });
+
+    // Check if the username is empty
+    if (
+      userUpdates &&
+      (!userUpdates.Username || userUpdates.Username.trim() === "")
+    ) {
+      console.warn("Username cannot be empty.");
+      enqueueSnackbar(
+        "Username cannot be empty. Please provide a valid username.",
+        {
+          variant: "error",
+        }
+      );
+      return; // Halt the function execution
+    }
+
+    // Check if the username has changed
+    if (
+      userUpdates &&
+      userUpdates.Username &&
+      userUpdates.Username !== currentUsername // Only check if the username is being changed
+    ) {
+      console.log("Checking if new username exists:", userUpdates.Username);
+
+      const usernameQuery = query(
+        collection(db, "users"),
+        where("Username", "==", userUpdates.Username)
+      );
+      const usernameSnapshot = await getDocs(usernameQuery);
+
+      if (!usernameSnapshot.empty) {
+        console.warn("Username already exists. Halting update.");
+        enqueueSnackbar("Username already exists. Please choose another one.", {
+          variant: "error",
+        });
+        return; // Ensure the function stops execution
+      }
+    }
+
     // Ensure Password is only updated if it is provided and not empty
     if (userUpdates && userUpdates.Password !== undefined) {
       if (userUpdates.Password.trim()) {
@@ -64,11 +111,12 @@ export const editUser = async ({
       }
     }
 
-    console.log("Final userUpdates:", userUpdates); // Debugging: Check the object before updating
+    console.log("Final userUpdates after validation:", userUpdates);
 
     // Update user document
     if (userUpdates) {
       await updateDoc(doc(db, "users", userId), userUpdates);
+      console.log("User document updated successfully.");
     }
 
     // Update ESP document
@@ -82,6 +130,7 @@ export const editUser = async ({
       if (!espQuerySnapshot.empty) {
         const espDocRef = espQuerySnapshot.docs[0].ref;
         await updateDoc(espDocRef, espUpdates);
+        console.log("ESP document updated successfully.");
       }
     }
 

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { editUser } from "../../Functions/HandleEditUser";
 import { useSnackbar } from "notistack";
 
-const EditUserForm = ({ userData, userId }) => {
+const EditUserForm = ({ userData, userId, setIsDrawerOpen }) => {
   const [formData, setFormData] = useState(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const espTypeOptions = [
@@ -71,17 +72,26 @@ const EditUserForm = ({ userData, userId }) => {
       delete userUpdates.Password; // Remove Password to avoid accidental updates
     }
 
+    // Check if username has changed and validate it
+
     try {
+      setIsLoading(true);
       await editUser({
         userId,
         userUpdates,
         espUpdates: formData.esp,
+        currentUsername: userData.user.Username,
+
         enqueueSnackbar,
       });
-      enqueueSnackbar("User updated successfully!", { variant: "success" });
+
+      setIsDrawerOpen(false);
     } catch (error) {
       console.error("Error saving data:", error);
       enqueueSnackbar("Error updating user.", { variant: "error" });
+      setIsDrawerOpen(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -107,6 +117,7 @@ const EditUserForm = ({ userData, userId }) => {
         onChange={(e) => handleInputChange(e, "user")}
         className="p-2 rounded mb-4 border border-gray-600 bg-white text-black"
         placeholder="Enter username"
+        disabled={isLoading}
       />
 
       {/* New Password Field */}
@@ -118,6 +129,7 @@ const EditUserForm = ({ userData, userId }) => {
         onChange={handlePasswordChange}
         className="p-2 rounded mb-4 border border-gray-600 bg-white text-black"
         placeholder="Enter new password"
+        disabled={isLoading}
       />
 
       {/* Confirm Password Field */}
@@ -131,6 +143,7 @@ const EditUserForm = ({ userData, userId }) => {
           passwordMatch ? "border-gray-600" : "border-red-500"
         } bg-white text-black`}
         placeholder="Confirm new password"
+        disabled={isLoading}
       />
       {!passwordMatch && (
         <p className="text-red-500 text-sm mb-4">Passwords do not match.</p>
@@ -143,6 +156,7 @@ const EditUserForm = ({ userData, userId }) => {
         value={formData.esp.ESPType || ""}
         onChange={(e) => handleInputChange(e, "esp")}
         className="p-2 rounded mb-4 border border-gray-600 bg-white text-black"
+        disabled={isLoading}
       >
         <option value="" disabled>
           Select ESP Type
@@ -161,6 +175,7 @@ const EditUserForm = ({ userData, userId }) => {
         value={formData.esp.Availability || ""}
         onChange={(e) => handleInputChange(e, "esp")}
         className="p-2 rounded mb-4 border border-gray-600 bg-white text-black"
+        disabled={isLoading}
       >
         <option value="" disabled>
           Select Availability
@@ -175,9 +190,12 @@ const EditUserForm = ({ userData, userId }) => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600"
+        className={`bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 ${
+          isLoading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        disabled={isLoading}
       >
-        Save Changes
+        {isLoading ? "Saving..." : "Save Changes"}
       </button>
     </form>
   );

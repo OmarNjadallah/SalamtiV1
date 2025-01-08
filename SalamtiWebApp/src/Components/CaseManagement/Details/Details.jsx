@@ -6,7 +6,7 @@ import ViewCasePage from "./DetailsPage";
 const Details = ({ caseId }) => {
   const [caseDetails, setCaseDetails] = useState(null);
   const hasFetched = useRef(false); // Ensure the fetch runs only once
-
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const handleFetchDetails = async () => {
     if (hasFetched.current) return; // Prevent repeated fetches
     hasFetched.current = true;
@@ -21,6 +21,8 @@ const Details = ({ caseId }) => {
 
   return (
     <Drawer
+      isDrawerOpen={isDrawerOpen}
+      setIsDrawerOpen={setIsDrawerOpen}
       userFormType={<ViewCasePage caseDetails={caseDetails} />}
       button="Details"
       buttonClassName="ml-1 bg-custom-gray text-center text-custom-white hover:bg-custom-dark-gray px-2 py-1 rounded transition-all duration-300 ease-in-out transform font-semibold"

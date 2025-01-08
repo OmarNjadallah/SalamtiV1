@@ -9,9 +9,9 @@ const Drawer = ({
   buttonClassName,
   onFetchData,
   classNameSize,
+  isDrawerOpen = false,
+  setIsDrawerOpen,
 }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };

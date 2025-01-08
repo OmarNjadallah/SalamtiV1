@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { addUser } from "../../Functions/HandleAddUser";
 import { useSnackbar } from "notistack";
 
-const AddUserForm = () => {
+const AddUserForm = ({ setIsDrawerOpen }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useState({
     licensePlate: "",
@@ -49,7 +49,7 @@ const AddUserForm = () => {
         type: formData.type,
       });
       enqueueSnackbar("User added successfully!", { variant: "success" });
-
+      setIsDrawerOpen(false);
       // Reset form
       setFormData({
         licensePlate: "",
@@ -59,6 +59,7 @@ const AddUserForm = () => {
       });
     } catch (error) {
       enqueueSnackbar(`Error: ${error.message}`, { variant: "error" });
+      setIsDrawerOpen(false);
     } finally {
       setIsSubmitting(false);
     }
