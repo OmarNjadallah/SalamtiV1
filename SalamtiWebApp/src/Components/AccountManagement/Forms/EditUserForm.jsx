@@ -118,6 +118,7 @@ const EditUserForm = ({ userData, userId, setIsDrawerOpen }) => {
         className="p-2 rounded mb-4 border border-gray-600 bg-white text-black"
         placeholder="Enter username"
         disabled={isLoading}
+        required
       />
 
       {/* New Password Field */}
