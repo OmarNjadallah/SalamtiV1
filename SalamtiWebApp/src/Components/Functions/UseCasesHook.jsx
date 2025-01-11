@@ -52,6 +52,14 @@ const fetchAreaName = async (lat, lng) => {
     return "Error";
   }
 };
+const parseTimestamp = (timestamp) => {
+  if (timestamp?.toDate) {
+    return timestamp.toDate();
+  } else if (typeof timestamp === "string") {
+    return new Date(timestamp);
+  }
+  return null;
+};
 
 export const useCases = () => {
   const [cases, setCases] = useState([]);
@@ -66,6 +74,114 @@ export const useCases = () => {
           const fetchedCases = await Promise.all(
             casesSnapshot.docs.map(async (caseDoc) => {
               const data = caseDoc.data();
+
+              // Calculate ESP counts by type
+              const ESPCounts = {
+                policeCount: 0,
+                ambulanceCount: 0,
+                firetruckCount: 0,
+                hazmatUnitCount: 0,
+                tacticalUnitCount: 0,
+                engineeringUnitCount: 0,
+                transportUnitCount: 0,
+              };
+
+              if (Array.isArray(data.ESPIDs)) {
+                for (const espID of data.ESPIDs) {
+                  const espData = await fetchUserData({
+                    userID: espID,
+                    type: "e",
+                  });
+                  const espType =
+                    espData?.associatedData?.ESPType?.toLowerCase() ||
+                    "unknown";
+
+                  // Increment the respective ESP type count
+                  if (espType.includes("police")) ESPCounts.policeCount++;
+                  if (espType.includes("ambulance")) ESPCounts.ambulanceCount++;
+                  if (espType.includes("firetruck")) ESPCounts.firetruckCount++;
+                  if (espType.includes("hazmat")) ESPCounts.hazmatUnitCount++;
+                  if (espType.includes("tactical"))
+                    ESPCounts.tacticalUnitCount++;
+                  if (espType.includes("engineering"))
+                    ESPCounts.engineeringUnitCount++;
+                  if (espType.includes("transport"))
+                    ESPCounts.transportUnitCount++;
+                }
+              }
+
+              // Calculate average response time
+
+              // Calculate average handling time
+              const avgHandlingTime = (() => {
+                if (!data.ESPsArrivalTime || !data.ESPsFinishTime) return 0;
+
+                const handlingTimes = data.ESPsFinishTime.map(
+                  (entry, index) => {
+                    try {
+                      const arrivalTime = parseTimestamp(
+                        data.ESPsArrivalTime[index]?.ArrivalTime
+                      ); // Match arrival and finish times by index
+                      const finishTime = parseTimestamp(entry?.FinishTime);
+
+                      // Ensure valid timestamps
+                      if (!arrivalTime || !finishTime) {
+                        throw new Error("Invalid timestamp encountered.");
+                      }
+
+                      const handlingTime =
+                        (finishTime - arrivalTime) / 1000 / 60; // Time in minutes
+                      return handlingTime > 0 ? handlingTime : null; // Exclude invalid or negative times
+                    } catch (error) {
+                      console.error(
+                        `Error calculating handling time for ESP at index ${index}: ${error.message}`,
+                        entry
+                      );
+                      return null;
+                    }
+                  }
+                ).filter((time) => time !== null); // Exclude null values
+
+                return handlingTimes.length
+                  ? handlingTimes.reduce((sum, time) => sum + time, 0) /
+                      handlingTimes.length // Average handling time in minutes
+                  : 0;
+              })();
+
+              const avgResponseTime = (() => {
+                if (!data.RequestTime || !data.ESPsArrivalTime) return 0;
+
+                const requestTime = parseTimestamp(data.RequestTime);
+
+                const responseTimes = data.ESPsArrivalTime.map(
+                  (entry, index) => {
+                    try {
+                      const arrivalTime = parseTimestamp(entry?.ArrivalTime);
+
+                      // Ensure valid timestamps
+                      if (!requestTime || !arrivalTime) {
+                        throw new Error("Invalid timestamp encountered.");
+                      }
+
+                      const responseTime =
+                        (arrivalTime - requestTime) / 1000 / 60; // Time in minutes
+                      return responseTime > 0 ? responseTime : null; // Exclude invalid or negative times
+                    } catch (error) {
+                      console.error(
+                        `Error calculating response time for ESP at index ${index}: ${error.message}`,
+                        entry
+                      );
+                      return null;
+                    }
+                  }
+                ).filter((time) => time !== null); // Exclude null values
+
+                return responseTimes.length
+                  ? responseTimes.reduce((sum, time) => sum + time, 0) /
+                      responseTimes.length // Average response time in minutes
+                  : 0;
+              })();
+
               const CivilianLocation =
                 Array.isArray(data.CivilianLocation) &&
                 data.CivilianLocation.length === 2
@@ -106,6 +222,10 @@ export const useCases = () => {
                       })()
                     : null,
                 Status: data.Status || "Unknown",
+                ESPIDs: data.ESPIDs || "Unknown",
+                ESPCounts,
+                avgResponseTime: avgResponseTime, // Convert to seconds
+                avgHandlingTime: avgHandlingTime, // Convert to seconds
               };
             })
           );
@@ -125,6 +245,7 @@ export const useCases = () => {
 
   return { cases, fetchCases };
 };
+
 export const fetchCaseById = async ({ caseId }) => {
   if (!caseId) {
     console.error("Error: caseId is undefined in fetchCaseById.");

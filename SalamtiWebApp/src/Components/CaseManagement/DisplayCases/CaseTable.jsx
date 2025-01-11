@@ -25,6 +25,7 @@ const CaseTable = ({ cases }) => {
               Civilian ID
             </th>
             <th className="bg-custom-gray-light px-4 py-2 w-[5%]">Details</th>
+            <th className="bg-custom-gray-light px-4 py-2 w-[5%]">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,7 +35,7 @@ const CaseTable = ({ cases }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="border-t px-4 py-2 text-center">
+              <td colSpan="9" className="border-t px-4 py-2 text-center">
                 No cases found.
               </td>
             </tr>

@@ -1,5 +1,6 @@
 import React from "react";
 import Details from "../Details/Details";
+import CancelCase from "../CancelCase/CancelCase";
 
 const CaseRow = ({ caseData }) => {
   // Determine the background color for the Status column only
@@ -27,6 +28,9 @@ const CaseRow = ({ caseData }) => {
       <td className="border-t px-4 py-2">{caseData.CivilianID}</td>
       <td className="border-t px-4 py-2 flex-row">
         <Details caseId={caseData.id} />
+      </td>
+      <td className="border-t px-4 py-2 flex-row">
+        {caseData.Status === "ongoing" && <CancelCase caseId={caseData.id} />}
       </td>
     </tr>
   );
