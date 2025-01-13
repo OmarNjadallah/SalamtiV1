@@ -1,14 +1,13 @@
 import {
   collection,
   doc,
-  setDoc,
+  runTransaction,
   GeoPoint,
   query,
   where,
   getDocs,
   Timestamp,
 } from "firebase/firestore";
-import bcrypt from "bcryptjs";
 import { db } from "../../../Config/Firebase";
 import { hashPassword } from "./HashPassword";
 
@@ -33,31 +32,34 @@ export const addUser = async ({ licensePlate, password, type }) => {
       throw new Error("License plate already exists.");
     }
 
-    // Generate unique IDs for users and civilians
+    // Generate unique IDs for users and ESPs
     const userId = doc(usersCollection).id;
     const espId = doc(espsCollection).id;
 
     // Hash the password
     const hashedPassword = hashPassword(password);
 
-    // Create the user document
-    const userDoc = {
-      Username: licensePlate,
-      UserType: "e", // Assuming 'e' indicates ESP user type
-      Password: hashedPassword,
-      LoginAttempts: 0,
-      SuspensionDate: Timestamp.now(),
-    };
-    await setDoc(doc(usersCollection, userId), userDoc);
+    // Run transaction
+    await runTransaction(db, async (transaction) => {
+      // Create the user document
+      const userDoc = {
+        Username: licensePlate,
+        UserType: "e", // Assuming 'e' indicates ESP user type
+        Password: hashedPassword,
+        LoginAttempts: 0,
+        SuspensionDate: Timestamp.now(),
+      };
+      transaction.set(doc(usersCollection, userId), userDoc);
 
-    // Create the ESP document
-    const espDoc = {
-      UserID: userId,
-      Availability: "unavailable",
-      ESPType: type,
-      Location: new GeoPoint(1, 1),
-    };
-    await setDoc(doc(espsCollection, espId), espDoc);
+      // Create the ESP document
+      const espDoc = {
+        UserID: userId,
+        Availability: "unavailable",
+        ESPType: type,
+        Location: new GeoPoint(1, 1),
+      };
+      transaction.set(doc(espsCollection, espId), espDoc);
+    });
 
     return { success: true, userId, espId };
   } catch (error) {
