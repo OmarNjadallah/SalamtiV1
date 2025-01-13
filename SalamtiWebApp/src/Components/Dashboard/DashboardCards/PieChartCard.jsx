@@ -13,6 +13,12 @@ function EmergenciesBreakdownCard({ casesData }) {
   const currentData =
     timePeriod && casesData[timePeriod] ? casesData[timePeriod] : [];
 
+  // Calculate total count for percentage calculation
+  const total = currentData.reduce(
+    (sum, item) => sum + parseInt(item.count, 10),
+    0
+  );
+
   return (
     <Card className="rounded-lg bg-gray-100 shadow-md flex flex-col col-span-4 row-span-1 h-full">
       {/* Header Section */}
@@ -52,7 +58,10 @@ function EmergenciesBreakdownCard({ casesData }) {
                   ...item,
                   value: parseInt(item.count, 10),
                 })),
-                arcLabel: (item) => `${item.value}`, // Ensure the value is returned as a string
+                arcLabel: (item) =>
+                  total > 0
+                    ? `${((item.value / total) * 100).toFixed(1)}%` // Calculate percentage
+                    : "0%",
               },
             ]}
             tooltip={{ trigger: "item" }}
