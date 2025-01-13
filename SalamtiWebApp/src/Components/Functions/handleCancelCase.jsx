@@ -1,5 +1,15 @@
 import { db } from "../../../Config/Firebase";
-import { doc, arrayUnion, Timestamp, runTransaction } from "firebase/firestore";
+import {
+  doc,
+  arrayUnion,
+  Timestamp,
+  runTransaction,
+  collection,
+  query,
+  getDocs,
+  where,
+  deleteDoc,
+} from "firebase/firestore";
 
 async function cancelCase(caseId, enqueueSnackbar) {
   try {
@@ -54,7 +64,13 @@ async function cancelCase(caseId, enqueueSnackbar) {
         Status: "cancelled",
       });
     });
+    const requestsRef = collection(db, "requests");
+    const requestQuery = query(requestsRef, where("CaseID", "==", caseId));
+    const requestSnapshots = await getDocs(requestQuery);
 
+    for (const requestDoc of requestSnapshots.docs) {
+      await deleteDoc(doc(db, "requests", requestDoc.id));
+    }
     // If the transaction succeeds
     enqueueSnackbar("Case Cancelled successfully!", { variant: "success" });
   } catch (error) {

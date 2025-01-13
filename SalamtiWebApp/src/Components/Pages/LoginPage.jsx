@@ -29,10 +29,12 @@ const Login = () => {
   return (
     <div className="relative flex items-center justify-center h-screen w-screen bg-gray-100 overflow-hidden">
       {/* Background Layers */}
-      <div className="absolute inset-0 bg-gray-800 opacity-90 transform rotate-45"></div>
-      <div className="absolute inset-0 bg-black opacity-80 transform rotate-45 -translate-y-10"></div>
-      <div className="absolute inset-0 bg-black opacity-70 transform rotate-45 translate-y-10"></div>
+      <div class="absolute top-[35%] -left-[97%] w-[350vh] h-[350vh] bg-black rotate-45 z-50"></div>
+      <div class="absolute top-[115%]  -right-[87%] w-[350vh] h-[350vh] bg-black  rotate-45 opacity-90 z-10 "></div>
+      <div class="absolute top-[95%]  -right-[87%] w-[350vh] h-[350vh] bg-black  rotate-45 opacity-55 z-20"></div>
 
+      <div class="absolute top-[75%]  -right-[87%] w-[350vh] h-[350vh] bg-black rotate-45 opacity-35 z-30"></div>
+      <div class="absolute top-[55%]  -right-[87%] w-[350vh] h-[350vh] bg-[#1CB793] opacity-90 rotate-45 "></div>
       {/* Error Message */}
       {error && (
         <div className="absolute top-10 w-full max-w-md px-4 text-center">
@@ -41,9 +43,8 @@ const Login = () => {
           </p>
         </div>
       )}
-
       {/* Form Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md bg-gray-100 rounded-lg shadow-lg p-8">
+      <div className="relative z-[100000] flex flex-col items-center justify-center w-full max-w-md bg-gray-100 rounded-lg shadow-lg p-8">
         <h2 className="text-4xl font-bold text-center text-gray-900 mb-6">
           Salamti
         </h2>
