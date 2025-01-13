@@ -2,17 +2,17 @@ import React from "react";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useSnackbar } from "notistack";
-import { deleteUser } from "../../Functions/HandleDeleteUser";
+import cancelCase from "../../Functions/handleCancelCase";
 import Button from "../../Common/Button";
 
-const CancelCase = ({ DeleteID }) => {
+const CancelCase = ({ caseId }) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleDelete = () => {
+  const handeCancel = () => {
     confirmAlert({
       customUI: ({ onClose }) => (
         <div style={styles.dialog}>
-          <h1 style={styles.title}>Confirm Deletion</h1>
+          <h1 style={styles.title}>Confirm Cancelation</h1>
           <p style={styles.message}>
             Are you sure you want to Cancel this case?
           </p>
@@ -21,7 +21,7 @@ const CancelCase = ({ DeleteID }) => {
               style={styles.confirmButton}
               onClick={async () => {
                 try {
-                  await deleteUser(DeleteID, enqueueSnackbar);
+                  await cancelCase(caseId, enqueueSnackbar);
                   onClose();
                 } catch (error) {
                   console.error(error);
@@ -52,7 +52,7 @@ const CancelCase = ({ DeleteID }) => {
 
   return (
     <Button
-      onClick={handleDelete}
+      onClick={handeCancel}
       className="bg-red-500 text-center text-custom-white hover:bg-red-700 px-2 py-1 rounded transition-all duration-300 ease-in-out transform font-semibold"
     >
       Cancel

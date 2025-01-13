@@ -1,32 +1,35 @@
 import {
   doc,
-  deleteDoc,
   collection,
   query,
   where,
   getDocs,
+  runTransaction,
 } from "firebase/firestore";
 import { db } from "../../../Config/Firebase";
 
 export const deleteUser = async (userId, enqueueSnackbar) => {
   try {
-    // Delete user from Firestore
-    const userRef = doc(db, "users", userId);
-    await deleteDoc(userRef);
+    await runTransaction(db, async (transaction) => {
+      // Delete the user document
+      const userRef = doc(db, "users", userId);
+      transaction.delete(userRef);
 
-    // Delete related ESPs
-    const espsRef = collection(db, "esps");
-    const q = query(espsRef, where("UserID", "==", userId));
-    const querySnapshot = await getDocs(q);
+      // Find and delete related ESP documents
+      const espsRef = collection(db, "esps");
+      const q = query(espsRef, where("UserID", "==", userId));
+      const querySnapshot = await getDocs(q);
 
-    const deletePromises = querySnapshot.docs.map((espDoc) =>
-      deleteDoc(doc(db, "esps", espDoc.id))
-    );
+      querySnapshot.forEach((espDoc) => {
+        const espRef = doc(db, "esps", espDoc.id);
+        transaction.delete(espRef);
+      });
+    });
 
-    await Promise.all(deletePromises);
-
+    // If the transaction succeeds
     enqueueSnackbar("User deleted successfully!", { variant: "success" });
   } catch (error) {
+    // If the transaction fails
     enqueueSnackbar("An error occurred while deleting the user.", {
       variant: "error",
     });
