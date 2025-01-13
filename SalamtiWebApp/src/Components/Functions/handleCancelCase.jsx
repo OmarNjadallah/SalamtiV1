@@ -29,6 +29,13 @@ async function cancelCase(caseId, enqueueSnackbar) {
           }),
         });
 
+        transaction.update(casesRef, {
+          ESPsArrivalTime: arrayUnion({
+            ESPID: espId,
+            ArrivalTime: currentTime,
+          }),
+        });
+
         // Update availability in the ESPs collection
         const espRef = doc(db, "esps", espId);
         transaction.update(espRef, {

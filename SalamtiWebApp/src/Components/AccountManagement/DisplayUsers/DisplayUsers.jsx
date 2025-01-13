@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import UserTable from "./UserTable";
 import { useUsers } from "../../Functions/UseUsersHook";
+import { fetchEspData } from "../../Functions/HandleEditUser";
 
 const DisplayUsers = ({ searchQuery }) => {
-  const { users, fetchUsersWithESPType } = useUsers();
+  const { users, fetchESPUsers } = useUsers();
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   // Filter users based on search query
@@ -32,8 +33,8 @@ const DisplayUsers = ({ searchQuery }) => {
   }, [searchQuery, users]);
 
   useEffect(() => {
-    fetchUsersWithESPType();
-  }, [fetchUsersWithESPType]);
+    fetchESPUsers();
+  }, [fetchESPUsers]);
 
   return (
     <div className="rounded-2xl w-[97%] mr-auto mt-6 ml-5 border-4 border-black h-[70vh] overflow-auto no-scrollbar">

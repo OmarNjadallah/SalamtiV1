@@ -7,6 +7,7 @@ import {
   where,
   getDocs,
   updateDoc,
+  runTransaction,
 } from "firebase/firestore";
 
 import { hashPassword } from "./HashPassword";
@@ -56,25 +57,14 @@ export const editUser = async ({
   enqueueSnackbar,
 }) => {
   try {
-    // Debugging: Log the input parameters
-    console.log("editUser called with:", {
-      userId,
-      userUpdates,
-      espUpdates,
-      currentUsername,
-    });
-
     // Check if the username is empty
     if (
       userUpdates &&
       (!userUpdates.Username || userUpdates.Username.trim() === "")
     ) {
-      console.warn("Username cannot be empty.");
       enqueueSnackbar(
         "Username cannot be empty. Please provide a valid username.",
-        {
-          variant: "error",
-        }
+        { variant: "error" }
       );
       return; // Halt the function execution
     }
@@ -85,8 +75,6 @@ export const editUser = async ({
       userUpdates.Username &&
       userUpdates.Username !== currentUsername // Only check if the username is being changed
     ) {
-      console.log("Checking if new username exists:", userUpdates.Username);
-
       const usernameQuery = query(
         collection(db, "users"),
         where("Username", "==", userUpdates.Username)
@@ -94,7 +82,6 @@ export const editUser = async ({
       const usernameSnapshot = await getDocs(usernameQuery);
 
       if (!usernameSnapshot.empty) {
-        console.warn("Username already exists. Halting update.");
         enqueueSnackbar("Username already exists. Please choose another one.", {
           variant: "error",
         });
@@ -111,34 +98,35 @@ export const editUser = async ({
       }
     }
 
-    console.log("Final userUpdates after validation:", userUpdates);
+    // Run transaction for atomic updates
+    await runTransaction(db, async (transaction) => {
+      const userDocRef = doc(db, "users", userId);
 
-    // Update user document
-    if (userUpdates) {
-      await updateDoc(doc(db, "users", userId), userUpdates);
-      console.log("User document updated successfully.");
-    }
-
-    // Update ESP document
-    if (espUpdates) {
-      const espQuery = query(
-        collection(db, "esps"),
-        where("UserID", "==", userId)
-      );
-      const espQuerySnapshot = await getDocs(espQuery);
-
-      if (!espQuerySnapshot.empty) {
-        const espDocRef = espQuerySnapshot.docs[0].ref;
-        await updateDoc(espDocRef, espUpdates);
-        console.log("ESP document updated successfully.");
+      // Update user document
+      if (userUpdates) {
+        transaction.update(userDocRef, userUpdates);
       }
-    }
 
-    enqueueSnackbar("User and ESP data updated successfully!", {
+      // Update ESP document
+      if (espUpdates) {
+        const espQuery = query(
+          collection(db, "esps"),
+          where("UserID", "==", userId)
+        );
+        const espQuerySnapshot = await getDocs(espQuery);
+
+        if (!espQuerySnapshot.empty) {
+          const espDocRef = espQuerySnapshot.docs[0].ref;
+          transaction.update(espDocRef, espUpdates);
+        }
+      }
+    });
+
+    enqueueSnackbar("ESP User data updated successfully!", {
       variant: "success",
     });
   } catch (error) {
     console.error("Error updating data:", error);
-    enqueueSnackbar("Failed to update user or ESP data.", { variant: "error" });
+    enqueueSnackbar("Failed to update ESP User Data.", { variant: "error" });
   }
 };
